@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""NEXUS QUANT: paper-only BTCUSDT spot prototype. Does not place real or testnet orders."""
+"""NEXUS QUANT: paper-only BTCUSDT spot prototype. Does not place real or testnet orders.
+This module deliberately contains no exchange trading credentials or signed order endpoint.
+"""
 from __future__ import annotations
 import argparse
 import datetime as dt
