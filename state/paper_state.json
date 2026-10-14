@@ -3,9 +3,9 @@
   "cash": 20,
   "btc": 0,
   "initial_capital": 20,
-  "last_bar": 1791990000000,
+  "last_bar": 1791993600000,
   "peak_equity": 20,
   "halted": false,
   "trades": [],
-  "last_action": "ALREADY_PROCESSED"
+  "last_action": "HOLD"
 }
