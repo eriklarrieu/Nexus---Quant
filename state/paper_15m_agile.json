@@ -1,18 +1,31 @@
 {
   "version": 1,
-  "cash": 20,
-  "btc": 0,
+  "cash": 10.0,
+  "btc": 0.00012190570137900174,
   "initial_capital": 20,
-  "last_bar": 1792006200000,
+  "last_bar": 1792008900000,
   "peak_equity": 20,
   "halted": false,
-  "trades": [],
-  "last_action": "HOLD",
+  "trades": [
+    {
+      "bar": 1792008900000,
+      "action": "BUY",
+      "quantity": 0.00012190570137900174,
+      "execution": 81948.58720299999,
+      "notional": 10.0,
+      "reason": "BULLISH_CROSS"
+    }
+  ],
+  "last_action": "BUY",
   "strategy": "agile_15m_v1",
-  "evaluations": 1,
-  "skipped_intervals": 0,
+  "evaluations": 2,
+  "skipped_intervals": 2,
   "realized_pnl_usd": 0,
-  "last_entry": null,
+  "last_entry": {
+    "bar": 1792008900000,
+    "execution": 81948.58720299999,
+    "notional": 10.0
+  },
   "last_exit_bar": null,
   "signal_events": [
     {
@@ -23,6 +36,15 @@
       "bid": 81815.22,
       "ask": 81815.23,
       "missed_bars": 0
+    },
+    {
+      "bar": 1792008900000,
+      "decision": "BUY",
+      "reason": "BULLISH_CROSS",
+      "close": 81909.0,
+      "bid": 81924.0,
+      "ask": 81924.01,
+      "missed_bars": 2
     }
   ],
   "started_utc": "2026-10-14T19:53:11.699182+00:00"
