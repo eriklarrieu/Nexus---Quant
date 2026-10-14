@@ -1,0 +1,59 @@
+name: NEXUS Quant - Comparacion 15m
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '9,24,39,54 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'paper15.py'
+      - 'comparison.py'
+      - 'compare_history.py'
+      - 'test_paper15.py'
+      - 'test_comparison.py'
+      - '.github/workflows/paper15.yml'
+permissions:
+  contents: write
+concurrency:
+  group: nexus-quant-15m-paper-state
+  cancel-in-progress: false
+jobs:
+  paper15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Probar estrategias y comparador
+        run: python -m unittest -v test_quant.py test_backtest.py test_paper15.py test_comparison.py
+      - name: Ejecutar SOLAMENTE simulacion 15 minutos
+        run: python paper15.py
+      - name: Comparar las cuentas virtuales independientes
+        run: python comparison.py
+      - name: Comparacion historica de referencia (no prueba rentabilidad)
+        continue-on-error: true
+        run: python compare_history.py
+      - name: Guardar resultados de simulacion
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-quant-15m-vs-1h
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Persistir cuenta VIRTUAL de 15 minutos
+        if: success()
+        run: |
+          git config user.name 'NEXUS Quant Paper Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add state/paper_15m.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore(paper15): update virtual balance [skip ci]'
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
