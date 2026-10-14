@@ -12,22 +12,22 @@ from quant import (api, equity, new_state, step, FEE_RATE, SLIPPAGE_RATE,
 SIMULATED_SPREAD = 0.0005
 
 
-def simulate(rows: list):
-    if len(rows) < SLOW_SMA + 3:
+def simulate(rows: list, fast=FAST_SMA, slow=SLOW_SMA):
+    if not 1 < fast < slow or len(rows) < slow + 3:
         raise ValueError("Se requieren mas velas cerradas")
     closes = [float(row[4]) for row in rows]
     s = new_state()
     portfolio = []
-    for i in range(SLOW_SMA + 2, len(rows)):
+    for i in range(slow + 2, len(rows)):
         open_price = float(rows[i][1])
         bid = open_price * (1 - SIMULATED_SPREAD / 2)
         ask = open_price * (1 + SIMULATED_SPREAD / 2)
-        s = step(s, int(rows[i-1][0]), closes[:i], bid, ask)
+        s = step(s, int(rows[i-1][0]), closes[:i], bid, ask, fast=fast, slow=slow)
         portfolio.append(equity(s, bid))
     final_price = float(rows[-1][4])
     final_bid = final_price * (1 - SIMULATED_SPREAD / 2)
     strategy_equity = equity(s, final_bid)
-    first_open = float(rows[SLOW_SMA+2][1])
+    first_open = float(rows[slow+2][1])
     buy_ask = first_open * (1 + SIMULATED_SPREAD / 2) * (1 + SLIPPAGE_RATE)
     held_qty = MAX_ALLOCATION_USD * (1 - FEE_RATE) / buy_ask
     benchmark = INITIAL_USD - MAX_ALLOCATION_USD + held_qty * final_bid * (1 - FEE_RATE - SLIPPAGE_RATE)
@@ -38,6 +38,8 @@ def simulate(rows: list):
         max_dd = max(max_dd, (peak-value)/peak)
     return {
         "simulation_only": True,
+        "fast_sma_bars": fast,
+        "slow_sma_bars": slow,
         "source": "Binance public OHLC candles; bid/ask historical not provided",
         "assumed_spread_pct": SIMULATED_SPREAD * 100,
         "assumed_fee_each_side_pct": FEE_RATE * 100,
