@@ -1,0 +1,52 @@
+name: NEXUS Quant - Paper Only
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'quant.py'
+      - 'backtest.py'
+      - 'test_quant.py'
+      - 'test_backtest.py'
+      - '.github/workflows/paper.yml'
+permissions:
+  contents: write
+concurrency:
+  group: nexus-quant-paper-state
+  cancel-in-progress: false
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Pruebas del simulador (15)
+        run: python -m unittest -v test_quant.py test_backtest.py
+      - name: Backtest historico de referencia
+        run: python backtest.py --limit 1000
+      - name: Simulacion exclusivamente virtual
+        run: python quant.py
+      - name: Conservar informes simulados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-quant-paper-report
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Persistir saldo virtual entre ejecuciones
+        run: |
+          git config user.name 'NEXUS Quant Paper Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add state/paper_state.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore(paper): persist virtual trading state [skip ci]'
+            git push
+          fi
