@@ -1,0 +1,65 @@
+name: NEXUS Quant - Agile 15m Experimental
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '8,23,38,53 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'paper15_agile.py'
+      - 'agile_backtest.py'
+      - 'agile_compare.py'
+      - 'test_paper15_agile.py'
+      - 'test_agile_backtest.py'
+      - '.github/workflows/agile15.yml'
+permissions:
+  contents: write
+concurrency:
+  group: nexus-quant-agile-15m-state
+  cancel-in-progress: false
+jobs:
+  agile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Comprobar motores y riesgos (41 pruebas)
+        run: python -m unittest -v test_quant.py test_backtest.py test_paper15.py test_comparison.py test_paper15_agile.py test_agile_backtest.py
+      - name: Tercera estrategia exclusivamente virtual
+        run: python paper15_agile.py
+      - name: Comparar tres carteras virtuales
+        run: python agile_compare.py
+      - name: Backtest retrospectivo con costes asumidos
+        continue-on-error: true
+        run: python agile_backtest.py
+      - name: Informes de auditoria virtual
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-quant-agile-experimental
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Guardar saldo virtual experimental con reintentos
+        if: success()
+        run: |
+          git config user.name 'NEXUS Quant Paper Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add state/paper_15m_agile.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore(agile15): record third virtual account [skip ci]'
+            for i in 1 2 3 4; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              sleep 2
+            done
+            exit 1
+          fi
