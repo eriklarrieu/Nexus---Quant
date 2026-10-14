@@ -45,13 +45,13 @@ def get_market(now_ms: int | None = None):
     return closed, bid, ask
 
 
-def signal(closes: list[float]):
-    if len(closes) < SLOW_SMA + 1:
+def signal(closes: list[float], fast: int = FAST_SMA, slow: int = SLOW_SMA):
+    if not 1 < fast < slow or len(closes) < slow + 1:
         return "WAIT"
-    short = sum(closes[-FAST_SMA:]) / FAST_SMA
-    long = sum(closes[-SLOW_SMA:]) / SLOW_SMA
-    old_short = sum(closes[-FAST_SMA-1:-1]) / FAST_SMA
-    old_long = sum(closes[-SLOW_SMA-1:-1]) / SLOW_SMA
+    short = sum(closes[-fast:]) / fast
+    long = sum(closes[-slow:]) / slow
+    old_short = sum(closes[-fast-1:-1]) / fast
+    old_long = sum(closes[-slow-1:-1]) / slow
     if old_short <= old_long and short > long:
         return "BUY"
     if old_short >= old_long and short < long:
@@ -69,7 +69,8 @@ def equity(state, bid):
     return state["cash"] + state["btc"] * bid * (1 - FEE_RATE - SLIPPAGE_RATE)
 
 
-def step(state: dict, bar_open_time: int, closes: list[float], bid: float, ask: float) -> dict:
+def step(state: dict, bar_open_time: int, closes: list[float], bid: float, ask: float,
+         fast: int = FAST_SMA, slow: int = SLOW_SMA) -> dict:
     p = json.loads(json.dumps(state))
     if p["last_bar"] is not None and int(bar_open_time) <= int(p["last_bar"]):
         p["last_action"] = "ALREADY_PROCESSED"
@@ -81,7 +82,7 @@ def step(state: dict, bar_open_time: int, closes: list[float], bid: float, ask: 
     p["peak_equity"] = max(p["peak_equity"], before)
     if before <= STOP_EQUITY_USD:
         p["halted"] = True
-    action = signal(closes)
+    action = signal(closes, fast=fast, slow=slow)
     if p["halted"] and p["btc"] > 0:
         action = "SELL"
     if p["halted"] and p["btc"] == 0:
