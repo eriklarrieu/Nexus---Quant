@@ -41,3 +41,14 @@ Consulta **Actions** y revisa que cada ejecución termine con éxito. Si falla p
 5. Obtener autorización específica del titular **después** de revisar pruebas y riesgos.
 
 **Capital real comprometido hoy: US$0. Saldo de US$20 bajo el control del accionista.**
+
+## Comparativa paralela 1h vs 15m (14–15 octubre 2026)
+
+- **1h**: se conserva el flujo original `.github/workflows/paper.yml`, con 12/48 velas (12h/48h de observación) y su cartera virtual `state/paper_state.json`. Sigue ejecutándose una vez por hora.
+- **15m**: flujo nuevo `.github/workflows/paper15.yml`, programado aproximadamente a los minutos 09, 24, 39 y 54 de cada hora (UTC); media rápida 48 velas y lenta 192 velas (las mismas ventanas de 12h/48h), cartera virtual separada `state/paper_15m.json` y tope de US$10 por entrada. Las horas de ejecución de GitHub **no son precisas ni garantizadas**.
+- **Comparación observacional**: `comparison.py` genera `reports/comparison.json` y `reports/comparison.md` comparando valores marcados a mercado; se ejecuta durante el flujo de 15 minutos. Las dos carteras arrancaron en momentos ligeramente distintos y no representan US$40 de capital real.
+- **Historia de referencia**: `compare_history.py` genera `reports/comparison_history.json`; aproxima ventanas retrospectivas de duración equivalente con los mismos supuestos de comisiones, spread y deslizamiento. No es una validación fuera de muestra ni una predicción.
+- **Errores observados**: el flujo 15m contabiliza intervalos perdidos como `skipped_intervals`; no inventa ejecuciones retroactivas con cotizaciones imposibles de recuperar. Las órdenes virtuales no equivalen a operaciones reales.
+- **Auditoría acordada**: 15 de octubre de 2026, **13:00 America/Santiago**. Comparar ganancias/pérdidas, órdenes, errores y riesgo; si faltan datos, extender la simulación. **Un solo día no prueba rentabilidad ni autoriza operar fondos reales.**
+
+Ambos sistemas consultan precios públicos de Binance, no usan claves API, y no envían órdenes a Binance. Antes de operar con fondos reales habría que validar la estrategia durante un período mucho más largo y autorizar específicamente un sistema de ejecución separado.
