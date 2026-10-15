@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "cash": 19.945046724382173,
-  "btc": 0.0,
+  "cash": 9.945046724382173,
+  "btc": 0.00012228783214909182,
   "initial_capital": 20,
-  "last_bar": 1792026000000,
+  "last_bar": 1792027800000,
   "peak_equity": 20,
   "halted": false,
   "trades": [
@@ -23,14 +23,26 @@
       "proceeds": 9.945046724382175,
       "net_pnl_usd": -0.054953275617824815,
       "reason": "BEARISH_TREND"
+    },
+    {
+      "bar": 1792027800000,
+      "action": "BUY",
+      "quantity": 0.00012228783214909182,
+      "execution": 81692.510403,
+      "notional": 10.0,
+      "reason": "BULLISH_CROSS"
     }
   ],
-  "last_action": "HOLD",
+  "last_action": "BUY",
   "strategy": "agile_15m_v1",
-  "evaluations": 10,
-  "skipped_intervals": 13,
+  "evaluations": 11,
+  "skipped_intervals": 14,
   "realized_pnl_usd": -0.054953275617824815,
-  "last_entry": null,
+  "last_entry": {
+    "bar": 1792027800000,
+    "execution": 81692.510403,
+    "notional": 10.0
+  },
   "last_exit_bar": 1792017900000,
   "signal_events": [
     {
@@ -121,6 +133,15 @@
       "close": 81729.55,
       "bid": 81643.14,
       "ask": 81643.15,
+      "missed_bars": 1
+    },
+    {
+      "bar": 1792027800000,
+      "decision": "BUY",
+      "reason": "BULLISH_CROSS",
+      "close": 81847.99,
+      "bid": 81668.0,
+      "ask": 81668.01,
       "missed_bars": 1
     }
   ],
