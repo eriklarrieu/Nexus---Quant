@@ -1,0 +1,47 @@
+name: NEXUS Quant - Micro 10s Validation
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'micro10_core.py'
+      - 'micro10_run.py'
+      - 'test_micro10.py'
+      - 'requirements-micro10.txt'
+      - '.github/workflows/micro10.yml'
+permissions:
+  contents: read
+concurrency:
+  group: nexus-micro10-validation
+  cancel-in-progress: false
+jobs:
+  micro10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install public market stream client
+        run: python -m pip install -r requirements-micro10.txt
+      - name: Run all Micro 10s decision-engine unit tests
+        run: python -m unittest -v test_micro10.py
+      - name: Verify ACTUAL Binance public 1s WebSocket feed for 55 seconds
+        run: |
+          python micro10_run.py \
+            --duration-seconds 55 \
+            --min-complete-bars 2 \
+            --state /tmp/nexus_micro10_smoke_state.json \
+            --report reports/micro10_smoke.json
+      - name: Preserve evidence of real market-stream reception
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-micro10-10s-public-market-evidence
+          path: reports/micro10_smoke.json
+          retention-days: 7
+          if-no-files-found: warn
+# NOTE: No cron. Github-hosted runner stops after 55s, cannot trade every 10s 24/7.
+# Continuous PAPER monitoring requires a separately provisioned always-on host.
+# This workflow never commits trading state, accepts exchange keys, or places orders.
