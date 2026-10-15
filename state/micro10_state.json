@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "strategy": "micro_10s_v1",
+  "paper_only": true,
+  "initial_capital": 20,
+  "cash": 20,
+  "btc": 0,
+  "last_bar": null,
+  "evaluations": 0,
+  "incomplete_10s_bars": 0,
+  "reconnects": 0,
+  "signal_events": [],
+  "trades": [],
+  "history": [],
+  "realized_pnl_usd": 0,
+  "peak_equity": 20,
+  "halted": false,
+  "entry": null,
+  "last_sell_bar": null,
+  "last_action": "INIT",
+  "created_utc": null,
+  "last_updated_utc": null
+}
