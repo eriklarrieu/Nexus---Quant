@@ -3,13 +3,13 @@
   "cash": 20,
   "btc": 0,
   "initial_capital": 20,
-  "last_bar": 1792056600000,
+  "last_bar": 1792059300000,
   "peak_equity": 20,
   "halted": false,
   "trades": [],
   "last_action": "HOLD",
   "interval": "15m",
-  "evaluations": 28,
-  "skipped_intervals": 42,
+  "evaluations": 29,
+  "skipped_intervals": 44,
   "started_utc": "2026-10-14T16:31:45.541395+00:00"
 }
