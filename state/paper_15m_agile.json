@@ -3,7 +3,7 @@
   "cash": 19.861894650924164,
   "btc": 0.0,
   "initial_capital": 20,
-  "last_bar": 1792068300000,
+  "last_bar": 1792071900000,
   "peak_equity": 20,
   "halted": false,
   "trades": [
@@ -44,8 +44,8 @@
   ],
   "last_action": "HOLD",
   "strategy": "agile_15m_v1",
-  "evaluations": 27,
-  "skipped_intervals": 43,
+  "evaluations": 28,
+  "skipped_intervals": 46,
   "realized_pnl_usd": -0.1381053490758326,
   "last_entry": null,
   "last_exit_bar": 1792030500000,
@@ -291,6 +291,15 @@
       "close": 80552.11,
       "bid": 80492.74,
       "ask": 80492.75,
+      "missed_bars": 3
+    },
+    {
+      "bar": 1792071900000,
+      "decision": "HOLD",
+      "reason": "NO_SETUP",
+      "close": 80208.89,
+      "bid": 80374.0,
+      "ask": 80374.01,
       "missed_bars": 3
     }
   ],
