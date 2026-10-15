@@ -1,3 +1,5 @@
+> **ESTADO DEL PROYECTO: ETAPA CERRADA (15-10-2026).** Por decisión del accionista, NEXUS Quant queda archivado como aprendizaje. Las cuatro automatizaciones de GitHub Actions ya no tienen disparadores por horario ni por cambios de código; sus ejecuciones solo pueden iniciarse manualmente si se reabre expresamente el proyecto. No hay ordenes reales ni conexion a cuentas de trading. El codigo, las pruebas y los historiales virtuales se conservan para aprendizaje, sin promesa de rentabilidad.
+
 # NEXUS Quant v0.1 — Operaciones virtuales exclusivamente
 
 **ESTE SOFTWARE NO COMPRA, VENDE NI TRANSFIERE CRIPTOMONEDAS REALES.** No acepta ni necesita claves de Binance. Consulta datos de mercado públicos y mantiene una contabilidad virtual de US$20. Las ganancias virtuales **no** son dinero cobrado ni rentabilidad futura.
