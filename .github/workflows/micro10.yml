@@ -1,14 +1,7 @@
 name: NEXUS Quant - Micro 10s Validation
+# ARCHIVED 2026-10-15 at shareholder request; no schedule or push trigger.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'micro10_core.py'
-      - 'micro10_run.py'
-      - 'test_micro10.py'
-      - 'requirements-micro10.txt'
-      - '.github/workflows/micro10.yml'
 permissions:
   contents: read
 concurrency:
