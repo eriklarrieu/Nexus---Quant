@@ -1,17 +1,7 @@
 name: NEXUS Quant - Agile 15m Experimental
+# ARCHIVED 2026-10-15 at shareholder request; no schedule or push trigger.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '8,23,38,53 * * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'paper15_agile.py'
-      - 'agile_backtest.py'
-      - 'agile_compare.py'
-      - 'test_paper15_agile.py'
-      - 'test_agile_backtest.py'
-      - '.github/workflows/agile15.yml'
 permissions:
   contents: write
 concurrency:
