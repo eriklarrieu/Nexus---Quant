@@ -1,16 +1,7 @@
 name: NEXUS Quant - Paper Only
+# ARCHIVED 2026-10-15 at shareholder request; no schedule or push trigger.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '23 * * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'quant.py'
-      - 'backtest.py'
-      - 'test_quant.py'
-      - 'test_backtest.py'
-      - '.github/workflows/paper.yml'
 permissions:
   contents: write
 concurrency:
