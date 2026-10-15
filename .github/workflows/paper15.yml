@@ -1,17 +1,7 @@
 name: NEXUS Quant - Comparacion 15m
+# ARCHIVED 2026-10-15 at shareholder request; no schedule or push trigger.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '9,24,39,54 * * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'paper15.py'
-      - 'comparison.py'
-      - 'compare_history.py'
-      - 'test_paper15.py'
-      - 'test_comparison.py'
-      - '.github/workflows/paper15.yml'
 permissions:
   contents: write
 concurrency:
