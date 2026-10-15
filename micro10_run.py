@@ -46,6 +46,7 @@ def load_state(path):
 async def run(duration_seconds, state_path, report_path, min_complete_bars=0, ws_url=STREAM):
     try:
         from websockets.asyncio.client import connect
+        from websockets.exceptions import ConnectionClosed
     except ImportError as exc:
         raise RuntimeError("Install websockets: pip install -r requirements-micro10.txt") from exc
 
@@ -138,7 +139,7 @@ async def run(duration_seconds, state_path, report_path, min_complete_bars=0, ws
                         store("STREAMING")
                 if deadline is not None and time.monotonic() >= deadline:
                     break
-        except (OSError, ValueError, TypeError, KeyError, RuntimeError, TimeoutError, asyncio.TimeoutError) as err:
+        except (ConnectionClosed, OSError, ValueError, TypeError, KeyError, RuntimeError, TimeoutError, asyncio.TimeoutError) as err:
             errors += 1
             print(json.dumps({"event": "FEED_INTERRUPTED", "error": str(err),
                               "utc": dt.datetime.now(dt.timezone.utc).isoformat()}), file=sys.stderr, flush=True)
