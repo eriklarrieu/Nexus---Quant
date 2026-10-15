@@ -67,3 +67,39 @@ Los tres sistemas consultan precios públicos de Binance, no usan claves API y n
 - **Limitaciones:** los trabajos programados pueden retrasarse o faltar, y el sistema no reconstruye operaciones hipotéticas de los intervalos no ejecutados; puede perder entradas o stops. Un backtest con pérdidas y pocas operaciones prospectivas no justifica operar con fondos reales.
 
 La evaluación de las tres carteras se realizará el **15 de octubre de 2026 a las 14:00 horas de Chile**, sobre datos que efectivamente puedan verificarse.
+
+## Cuarta estrategia: NEXUS Micro 10s (autorizada 15 octubre 2026)
+
+**Estado real:** codigo de proceso WebSocket continuo listo para ejecutar en una maquina propia; flujo de GitHub Actions para una prueba limitada a 55 segundos. **NO hay servidor 24/7 contratado ni operativo.** No se envian ordenes a Binance Spot/Testnet ni se utilizan claves privadas. Cuarta cartera separada de US$20 exclusivamente VIRTUALES, no US$80 depositados. Las tres estrategias originales permanecen sin cambios.
+
+### Datos y velas
+
+- WebSocket publico de Binance: wss://data-stream.binance.vision:443/stream?streams=btcusdt@kline_1s/btcusdt@bookTicker
+- Agrupa **diez velas 1s cerradas y consecutivas** para construir una vela de 10 segundos. Si falta un segundo, descarta la vela y registra la omision, sin inventar precios.
+- Usa bid/ask de la misma conexion. No ejecuta senales con cotizacion de mas de 3 segundos o spread de mas de 0,08%.
+- El estado se guarda atomicamente en state/micro10_state.json, el ultimo informe en reports/micro10_latest.json. Detecta reconexiones, decisiones, fills simulados y velas incompletas. Despues de caidas no reproduce operaciones hipoteticas del pasado.
+
+### Reglas experimentales (rentabilidad NO demostrada)
+
+- SMA6 y SMA18 sobre velas 10s, cruce alcista con momentum minimo del 0,25% sobre 30 segundos.
+- Maximo US$10 por compra virtual, 4 compras por dia UTC, 12 velas de enfriamiento despues de vender.
+- Stops **simulados**, no ejecutados en exchange: caida del 0,4%, beneficio objetivo del 0,6%, reversion de tendencia o limite temporal de 60 velas.
+- Detiene nuevas compras cuando el valor de cartera virtual llega a US$19 o menos o las perdidas realizadas en el dia alcanzan US$0,35. Limites no garantizados: si se corta el flujo, no puede ejecutar un stop.
+- Comision supuesta 0,1% por lado y deslizamiento 0,03% por lado, mas spread observado. Ninguna compra se fuerza para generar actividad.
+- Al arrancar desde cero requiere aproximadamente 190 segundos para reunir suficiente historial; hasta entonces genera HOLD.
+
+### Instalacion en servidor o equipo constantemente encendido
+
+Python 3.11+:
+
+    python -m pip install -r requirements-micro10.txt
+    python -m unittest -v test_micro10.py
+    python micro10_run.py --duration-seconds 0
+
+Duracion cero inicia ejecucion hasta que se interrumpa. Requiere maquina/VM siempre encendida, supervision, reinicios automaticos y conexion de red. Si el equipo se apaga, **el bot deja de observar y simular**; no se reponen operaciones omitidas.
+
+### GitHub Actions solo verifica, no aloja un bot continuo
+
+.github/workflows/micro10.yml ejecuta pruebas y, cuando se publica codigo o se activa manualmente, hace una sesion acotada de 55 segundos con el WebSocket de Binance. Reporta cuantas velas 10s completas recibio, sin movimientos reales. Guarda un artefacto nexus-micro10-10s-public-market-evidence. El flujo NO tiene programacion cada 10 segundos ni cada 5 minutos: es imposible garantizar operativa micro en la infraestructura intermitente de GitHub Actions. Antes de afirmar funcionamiento 24/7, hay que desplegarlo en un host continuo y verificarlo.
+
+**Capital real gastado US$0. No hay cuenta de Binance conectada ni ordenes reales o Testnet.**
