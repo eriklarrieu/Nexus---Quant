@@ -7,5 +7,5 @@
   "peak_equity": 20,
   "halted": false,
   "trades": [],
-  "last_action": "HOLD"
+  "last_action": "ALREADY_PROCESSED"
 }
